@@ -1,3 +1,0 @@
-lkrtnmblfgb
-ytrbn
-def
