@@ -3,7 +3,7 @@ cosmonavti = 0
 max_rost = 0
 min_rost = 1000
 while rost != "!":
-    if 150 < int(rost) <= 190:
+    if 150 <= int(rost) <= 190:
         cosmonavti += 1
         if int(rost) > max_rost:
             max_rost = int(rost)
