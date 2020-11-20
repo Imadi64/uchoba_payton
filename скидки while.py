@@ -1,11 +1,13 @@
-value = None
-result = 0
-discount = 0.05
-start_discount = 1000
-while True:
-    value = float(input())
-    if value == -1.0:
-        break
-    else:
-        result += value if value <= start_discount else value - value * discount
-print(result)
+
+# В магазине акция: скидка 5% на товары, цена которых превышает 1000 рублей.
+# Напишите программу, отчасти имитирующую работу кассового аппарата:
+# вводятся цены покупаемых товаров, нужно вывести общую стоимость товаров с учётом скидки.
+
+cena = float(input())
+symma = 0
+while cena > 0:
+    if cena > 1000:
+        cena *= .95
+    symma += cena
+    cena = float(input())
+print(symma)
