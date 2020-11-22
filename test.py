@@ -1,8 +1,4 @@
-t = float(input())
-n = 0
-sum_t = 0
-while t > -300:
-    n += 1
-    sum_t += t
-    t = float(input())
-print(sum_t / n)
+razvilka_1 = input()
+while (razvilka_1 != "прямо") and (razvilka_1 != "направо") and (razvilka_1 != "налево"):
+    razvilka_1 = input()
+    print(razvilka_1)
