@@ -1,4 +1,4 @@
-razvilka_1 = input()
-while (razvilka_1 != "прямо") and (razvilka_1 != "направо") and (razvilka_1 != "налево"):
-    razvilka_1 = input()
-    print(razvilka_1)
+n = int(input())
+for i in range(1, n + 1):
+    for j in range(1, n + 1):
+        print(i, "*", j, "=", i * j)

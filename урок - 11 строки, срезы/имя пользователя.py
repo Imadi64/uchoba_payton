@@ -1,11 +1,8 @@
-s = input()
-f = False
-for symb in s:
-    if symb == "_":
-        if "a" <= symb <= "z":
-            if "0" >= symb >= "9":
-        print("OK")
-        f = True
+hars = ['_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+nik_name = list(input())
+for i in nik_name:
+    if i not in '1234567890_qwertyuiopasdfghjklzxcvbnm':
+        print('Неверный символ:', i)
         break
-if not f:
-    print("Неверный символ:", symb )
+else:
+    print('OK')
