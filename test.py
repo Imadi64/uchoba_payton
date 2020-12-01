@@ -1,15 +1,13 @@
-print("Любите ли вы помогать?")
-otvet = input()
-if "нет" in otvet or "не " in otvet:
-    t1 = "Вы неготовы помогать,"
-elif "да" in otvet or "люблю" in otvet or "конечно" in otvet:
-    t1 = "Вы готовы помочь,"
-elif "наверно" in otvet:
-    t1 = "Вы неуверены в себе,"
-elif "незнаю" in otvet or "" == otvet:
-    t1 = "Вы нехотите прилогать усилие,"
-else:
-    t1 = "Вы невнимательны"
-    print("Предусмотренно четыре варианта ответов\n\"да\", \"нет\", \"наверно\", \"незнаю\".")
-
-print(t1)
+hight = int(input())
+wight = int(input())
+char = input()
+for i in range(hight):
+    if i == 0 or i == hight - 1:
+        for j in range(wight):
+            print(char, end='')
+    else:
+        print(char, end='')
+        for j in range(1, wight - 1):
+            print(' ', end='')
+        print(char, end='')
+    print()
