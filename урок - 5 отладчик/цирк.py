@@ -1,11 +1,9 @@
 a = int(input())
-summ = 1
-summ = summ + 1
-h = 1
-while summ != a:
-    if summ * 2 < a:
-        summ *= 2
-    if summ * 2 > a:
-        summ += 1
-    h += 1
-print(h)
+shag = 0
+while a != 1:
+    if a % 2 == 0:
+        a /= 2
+    else:
+        a -= 1
+    shag += 1
+print(shag)
