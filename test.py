@@ -1,4 +1,3 @@
-a = []
-for i in range(3):
-    a.append([] * 3)
-print(a)
+molochi = [1, 2, 3]
+for z in molochi:
+    print(z)
