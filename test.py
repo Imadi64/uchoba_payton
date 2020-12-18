@@ -1,22 +1,7 @@
-a = int(input())
-b = int(input())
+myString="Wellcome to our course!"
+counter=0
+for symbol in myString:
+    if symbol =='r':
+	    counter=counter+1
 
-while a != 0 or b != 0:
-    n = int(input()) - 1
-    c = int(input())
-
-    if n:
-        b -= c
-        print(a, b)
-    else:
-        a -= c
-        print(a, b)
-
-# 10
-# 10
-# 1
-# 5
-# 2
-# 10
-# 1
-# 5
+print (counter)
