@@ -1,8 +1,12 @@
-n = int(input())
-a = []
-for i in range(n):
-    a.append(input())
-k = int(input())
-for i in a:
-    if k <= len(i):
-        print(i[k - 1], end='')
+rows = int(input())
+cols = int(input())
+table = []
+for i in range(rows):
+    row = []
+    for j in range(cols):
+        row.append(input())
+    table.append(row)
+for i in range(rows):
+    for j in range(cols):
+        print(table[i][j], end='\t')
+    print()

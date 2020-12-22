@@ -12,3 +12,4 @@ for i in vop:
     for key, value in napomin_d_r.items():
         if value == i:
             print(key, end=" ")
+    print()

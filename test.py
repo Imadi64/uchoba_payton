@@ -1,23 +1,10 @@
-a = int(input())
-s = 0
-f = ''
-slow = dict()
-while s != a:
-    u = input()
-    for i in range(len(u)):
-        if u[i] != ' ':
-            f += u[i]
-        else:
-            break
-    u = u.split()
-    del u[0]
-    slow[f] = u
-    f = ''
-    s += 1
-b = int(input())
-for _ in range(b):
-    new = input()
-    if new not in slow:
-        print('Нет в словаре')
-    else:
-        print(*slow[new])
+chislo = int(input())
+minimym = 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+spis = []
+for i in range(chislo):
+    spis.append(input())
+for j in spis:
+    if list(spis[j]) > list(spis[j + 1]):
+        spis[j], spis[j + 1] = spis[j + 1], spis[j]
+for i in spis:
+    print(i)
