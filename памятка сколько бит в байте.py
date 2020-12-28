@@ -1,5 +1,15 @@
-print("1 бит - минимальная единица количества информации.")
-print("1 байт = 8 бит.")
-print("1 Килобит = 1024 бита.")
-print("1 Килобайт = 1024 байта.")
-print("1 Килобайт =", 1024 * 8, "бит.")
+angl_ima = int(input())
+nemetsk_ima = int(input())
+iaziki = set()
+familii = set()
+for i in range(angl_ima + nemetsk_ima):
+    familia = input()
+    if familia in iaziki:
+        familii.add(familia)
+    else:
+        iaziki.add(familia)
+difference = iaziki - familii
+if not difference:
+    print('NO')
+else:
+    print(len(difference))
