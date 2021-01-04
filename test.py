@@ -1,14 +1,12 @@
-menu = set()
-ispol_menu = set()
-ne_ispol_menu = set()
-menu_N = int(input())
-for i in range(menu_N):
-    menu.add(input())
-menu_na_segodna = int(input())
-for i in range(menu_na_segodna):
-    menu_in_day_N = int(input())
-    for j in range(menu_in_day_N):
-        ispol_menu.add(input())
-ne_ispol_menu = menu - ispol_menu
-for i in ne_ispol_menu:
-    print(i)
+data_count = int(input())
+data = [input() for _ in range(data_count)]
+search_data_count = int(input())
+search_data = [input() for _ in range(search_data_count)]
+for data_item in data:
+    substring_index = 0
+    for search_data_item in search_data:
+        substring_index = data_item.find(search_data_item)
+        if substring_index == -1:
+            break
+    if substring_index != -1:
+        print(data_item)
