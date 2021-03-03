@@ -18,5 +18,21 @@ def solve(*coeffs):
         return 0
 
 
+def password(func):
+    def check(n):
+        k = input()
+        if k != 'qwerty':
+            print('В доступе отказано')
+            return
+        func(n)
 
-print(sorted(solve(1, 2, 1)))
+    return check
+
+
+@password
+def fib(n):
+    if n == 1 or n == 2:
+        print(1)
+    else:
+        print(fib(n - 1) + fib(n - 2))
+    return
