@@ -1,12 +1,21 @@
-data_count = int(input())
-data = [input() for _ in range(data_count)]
-search_data_count = int(input())
-search_data = [input() for _ in range(search_data_count)]
-for data_item in data:
-    substring_index = 0
-    for search_data_item in search_data:
-        substring_index = data_item.find(search_data_item)
-        if substring_index == -1:
-            break
-    if substring_index != -1:
-        print(data_item)
+translated_text = []
+
+
+def split(s):
+    return [char for char in s]
+
+
+def translate(text):
+    global translated_text
+    glasnie_bykvi = ["а", "А", "у", "У", "Е", "е", "О", "о", "Э",
+                     "э", "Я", "я", "И", "и", "Ю", "ю", "Ё", "Ё", ",",
+                     ".", "\"\"", "?", "!", "-", "...", ":", ";", "(", ")", "\'"]
+    text = split(text)
+    for i in text:
+        if not i in glasnie_bykvi:
+            del text[i]
+
+
+print(translated_text)
+
+translate("орулбсюатврэвляртке")

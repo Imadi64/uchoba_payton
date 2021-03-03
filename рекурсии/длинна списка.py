@@ -1,15 +1,21 @@
-def find_farthest_orbit(list_of_orbits):
-    orb_planet = []
-    pi = 3.14
-    for i in list_of_orbits:
-        if (i[0] != i[1]):
-            S = pi * i[0] * i[1]
-            orb_planet.append(S)
-            a = max(orb_planet)
-    for i in list_of_orbits:
-        if (pi * i[0] * i[1] == a) and (i[0] != i[1]):
-            return i
+def bracket_check(test_string):
+    a = 0
+    for i in test_string:
+        if test_string == None:
+            print("YES")
+            break
+        if i == "(":
+            a += 1
+        if i == ")":
+            a -= 1
+        if a < 0:
+            break
+
+    if a != 0:
+        print("NO")
+
+    else:
+        print("YES")
 
 
-orbits = [(1.0, 4.0), (5.0, 1.0)]
-print(*find_farthest_orbit(orbits))
+bracket_check("())(()")
