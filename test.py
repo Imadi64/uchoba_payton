@@ -1,63 +1,76 @@
-from PIL import Image, ImageFilter
-import numpy as np
+from PIL import Image, ImageDraw
 
 
-def bw_convert():  # делает фото черно-бедым
-    img = Image.open('image.jpg')
-    image = np.asarray(img)
-    # узнаем размерность массива
-    x, y, _ = image.shape
-    k = np.array([0.2989, 0.587, 0.114])
-    arr = np.round(np.sum(image * k, axis=2)).astype(np.uint8).reshape((x, y))
-    image2 = Image.fromarray(arr)
-    image2.save('res.jpg')
+def picture(file_name, width, height, sky_color="#87CEEB", ocean_color="#017B92", boat_color="#874535",
+            sail_color="#FFFFFF", sun_color="#FFCF40"):
+    im = Image.new("RGB", (width, height))
+    drawer = ImageDraw.Draw(im)
+
+    drawer.rectangle(((0, 0), (width, int(height * 0.8))), sky_color)
+    drawer.rectangle(((0, int(height * 0.8)), (width, height)),
+                     ocean_color)
+    drawer.ellipse((
+        (int(0.8 * width), -int(0.2 * height)),
+        (int(1.2 * width), int(0.2 * height))),
+        sun_color)
+    drawer.polygon(((int(0.25 * width), int(0.65 * height)),
+                    (int(0.49 * width), int(0.65 * height)),
+                    (int(0.49 * width), int(0.3 * height)),
+                    (int(0.51 * width), int(0.3 * height)),
+                    (int(0.51 * width), int(0.65 * height)),
+                    (int(0.75 * width), int(0.65 * height)),
+                    (int(0.7 * width), int(0.85 * height)),
+                    (int(0.3 * width), int(0.85 * height))), boat_color)
+    drawer.polygon(((int(0.51 * width + 1), int(0.3 * height)),
+                    (int(0.66 * width + 1), int(0.45 * height)),
+                    int(0.51 * width + 1), int(0.6 * height)), sail_color)
+    im.save(file_name)
 
 
-def negative(source, res):  # делает фото в негативе
-    source = Image.open(source)
-    result = Image.new('RGB', source.size)
-    for x in range(source.size[0]):
-        for y in range(source.size[1]):
-            r, g, b = source.getpixel((x, y))
-            result.putpixel((x, y), (255 - r, 255 - g, 255 - b))
-    result.save(res, "JPEG")
+picture('rss.jpg', 1000, 800)
+
+from docx import Document
 
 
-def image_filter(pixels, i, j):  # Заменяет цвет исходного пикселя на средний, относительно его окружения
-    r, g, b = 0, 0, 0
-    for row in range(11):
-        for col in range(11):
-            if row != i or col != j:
-                r += pixels[row, col][0]
-                g += pixels[row, col][1]
-                b += pixels[row, col][2]
-    return int(r / 120), int(g / 120), int(b / 120)
-
-
-def transparency(file1, file2):  # позволяет наложить одно фото на другое сделав первое полу прозрачным
-    im1 = Image.open(file1)
-    im2 = Image.open(file2)
-    x, y = im1.size
-    pix1 = im1.load()
-    pix2 = im2.load()
-    for i in range(x):
-        for j in range(y):
-            r1, g1, b1 = pix1[i, j]
-            r2, g2, b2 = pix2[i, j]
-            r = int(0.5 * r1 + 0.5 * r2)
-            g = int(0.5 * g1 + 0.5 * g2)
-            b = int(0.5 * b1 + 0.5 * b2)
-            pix1[i, j] = r, g, b
-    im1.save('res.jpg')
-
-
-def razmitie(n):  # делает ВСЕ фото размытым
-    im = Image.open("image.jpg")
-    im = im.filter(ImageFilter.GaussianBlur(radius=n))
-    im.save('res.jpg')
-
-
-
+def markdown_to_docx(text):
+    document = Document()
+    lines = text.split('\n')
+    document.add_heading(lines[0], 0)
+    for line in lines[1:]:
+        if line:
+            if line[:7].count('#') == 1:
+                document.add_heading(line[2:], level=1)
+            elif line[:7].count('#') == 2:
+                document.add_heading(line[3:], level=2)
+            elif line[:7].count('#') == 3:
+                document.add_heading(line[4:], level=3)
+            elif line[:7].count('#') == 4:
+                document.add_heading(line[5:], level=4)
+            elif line[:7].count('#') == 5:
+                document.add_heading(line[6:], level=5)
+            elif line[:7].count('#') == 6:
+                document.add_heading(line[7:], level=6)
+            elif str(line[:2]) == '- ':
+                document.add_paragraph(line[2:], style='List Bullet')
+            elif str(line[:2]) == '* ':
+                document.add_paragraph(line[2:], style='List Bullet')
+            elif str(line[:2]) == '+ ':
+                document.add_paragraph(line[2:], style='List Bullet')
+            elif line[0].isdigit() and line[1] == '.':
+                document.add_paragraph(line[3:], style='List Number')
+            elif line[:3].count('_') == 1 or line[:3].count('*') == 1:
+                document.add_paragraph().add_run(line[1:-1]).italic = True
+            elif line[:3].count('_') == 2 or line[:3].count('*') == 2:
+                document.add_paragraph().add_run(line[2:-2]).bold = True
+            elif line[:3].count('_') == 3 or line[:3].count('*') == 3:
+                runner = document.add_paragraph().add_run(line[3:-3])
+                runner.bold = True
+                runner.italic = True
+            else:
+                document.add_paragraph(line)
+        else:
+            document.add_paragraph()
+    document.save('res.docx')
 
 
 
