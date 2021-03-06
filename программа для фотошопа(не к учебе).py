@@ -55,14 +55,3 @@ def razmitie(n):  # делает ВСЕ фото размытым
     im = Image.open("image.jpg")
     im = im.filter(ImageFilter.GaussianBlur(radius=n))
     im.save('res.jpg')
-
-
-
-
-
-
-
-
-
-
-
