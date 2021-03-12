@@ -1,3 +1,4 @@
+import random
 """модуль datatame
 import datetime
 
@@ -60,3 +61,4 @@ print(random.randint(0, 5))
 print(random.randint(0, 5))
 
 '''
+help(random)

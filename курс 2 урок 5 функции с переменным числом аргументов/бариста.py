@@ -1,21 +1,36 @@
-ingredients = {'Эспрессо': [1, 0, 0], 'Капучино': [1, 3, 0],
-              'Маккиато': [2, 1, 0], 'Кофе по-венски': [1, 0, 2],
-              'Латте Маккиато': [1, 2, 1], 'Кон Панна': [1, 0, 1]}
-
-
-def choose_coffee(*preferences):
-    for i in preferences:
-        if ingredients[i][0] <= ingredients[0] and ingredients[i][1] <= ingredients[1] \
-                and ingredients[i][2] <= ingredients[2]:
-            ingredients[0] -= ingredients[i][0]
-            ingredients[1] -= ingredients[i][1]
-            ingredients[2] -= ingredients[i][2]
-            return i
-    return 'К сожалению, не можем предложить Вам напиток'
-
-
-ingredients = []
-
+def choose_coffee(*preference):
+    global ingredients
+    for pref in preference:
+        if pref == 'Эспрессо':
+            if ingredients[0] >= 1:
+                ingredients[0] -= 1
+                return pref
+        if pref == 'Капучино':
+            if ingredients[0] >= 1 and ingredients[1] >= 3:
+                ingredients[0] -= 1
+                ingredients[1] -= 3
+                return pref
+        if pref == 'Маккиато':
+            if ingredients[0] >= 2 and ingredients[1] >= 1:
+                ingredients[0] -= 2
+                ingredients[1] -= 1
+                return pref
+        if pref == 'Кофе по-венски':
+            if ingredients[0] >= 1 and ingredients[2] >= 2:
+                ingredients[0] -= 1
+                ingredients[2] -= 2
+                return pref
+        if pref == 'Латте Маккиато':
+            if ingredients[0] >= 1 and ingredients[1] >= 2 and ingredients[2] >= 1:
+                ingredients[0] -= 1
+                ingredients[1] -= 2
+                ingredients[2] -= 1
+                return pref
+        if pref == 'Кон Панна':
+            if ingredients[0] >= 1 and ingredients[2] >= 1:
+                ingredients[0] -= 1
+                ingredients[2] -= 1
+                return pref
 
 
 
@@ -23,3 +38,9 @@ ingredients = []
 ingredients = [1, 2, 3]
 print(choose_coffee("Эспрессо", "Капучино", "Маккиато", "Кофе по-венски", "Латте Маккиато", "Кон Панна"))
 print(choose_coffee("Эспрессо", "Капучино", "Маккиато", "Кофе по-венски", "Латте Маккиато", "Кон Панна"))
+print("")
+print("")
+ingredients = [4, 4, 0]
+print(choose_coffee("Капучино", "Маккиато", "Эспрессо"))
+print(choose_coffee("Капучино", "Маккиато", "Эспрессо"))
+print(choose_coffee("Капучино", "Маккиато", "Эспрессо"))
