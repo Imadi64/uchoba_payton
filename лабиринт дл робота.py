@@ -56,6 +56,4 @@ if spis_matriks[a][b] == 2:
 else:
     print(spis_hodov[-1][-1])
 for i in spis_hodov:
-    print("")
-    for j in i:
-        print(j, end="\t")
+    print (i)
