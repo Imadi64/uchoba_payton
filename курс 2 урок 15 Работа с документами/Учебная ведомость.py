@@ -1,13 +1,13 @@
-from docx import Document
-
 from docxtpl import DocxTemplate
-import sys
 
-inform = sys.stdin.read().split("\n")
-document = Document()
-for i in range(len(inform))
-    document.add_heading("Приглошение", 0)
-    p = document.add_paragraph(f"Прив {inform[i]}")
-    p = document.add_paragraph(f"приглашаю в {inform[1]}{inform[0]}")
-    document.add_page_break()
-document.save("res.docx")
+
+def create_training_sheet(class_name, subject_name, name, *marks):
+    d = DocxTemplate(name)
+    marks = sorted(marks, key=lambda x: x[0])
+    context = {'class_name': class_name,
+               'subject_name': subject_name,
+               'marks': [
+                   {'num': i + 1, 'fio': marks[i][0], 'mark': marks[i][1]}
+                   for i in range(len(marks))]}
+    d.render(context)
+    d.save("res.docx")
