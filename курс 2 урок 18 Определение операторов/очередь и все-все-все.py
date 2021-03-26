@@ -1,42 +1,65 @@
 class Queue:
     def __init__(self, *values):
-        self.data = list(values)
+        self.nums = []
+        self.data = " "
+        for i in values:
+            self.nums.append(i)
 
     def append(self, *values):
-        self.data += list(values)
-
-    def __str__(self):
-        return '[' + ' -> '.join(map(str, self.data)) + ']'
+        for i in values:
+            self.nums.append(i)
 
     def copy(self):
-        return Queue(*self.data)
+        new = Queue()
+        new.nums += self.nums
+        return new
 
     def pop(self):
-        return self.data.pop(0)
+        if self.nums:
+            first = self.nums[0]
+            del self.nums[0]
+            return first
 
     def extend(self, queue):
-        self.data.extend(queue.data)
+        self.nums += queue.nums
+
+    def next(self):
+        new = self.copy()
+        new.nums = new.nums[1:]
+        return new
+
+    def __rshift__(self, n):
+        if len(self.nums) > n:
+            new = Queue()
+            new.nums += self.nums[n:]
+            return new
+        return Queue()
+
+    def __add__(self, other):
+        new = self.copy()
+        new.nums += other.nums
+        return new
+
+    def __iadd__(self, other):
+        self.data += other.data
+        return self
+
+    def __eq__(self, other):
+        if self.nums == other.nums:
+            return True
+        return False
+
+    def __str__(self):
+        if self.nums:
+            self.nums = list(map(str, self.nums))
+            nums = ' -> '.join(self.nums)
+            return f'[{nums}]'
+        return '[]'
 
     def __next__(self):
         n = self.data[1:]
         return Queue(*n)
 
-    def next(self):
-        n = self.data[1:]
-        return Queue(*n)
-
-    def __add__(self, other):
-        return Queue(*(self.data + other.data))
-
-    def __iadd__(self, other):
-        return Queue(*(self.data + other.data))
-
-    def __eq__(self, other):
-        return self.data[:] == other.data[:]
-
-    def __rshift__(self, other):
-        n = self.data[other:]
-        return Queue(*n)
 
 q1 = Queue(1, 2, 3)
 print(q1)
@@ -59,5 +82,4 @@ print(q4)
 q5 = next(q4)
 print(q4)
 print(q5)
-print()
-print()
+

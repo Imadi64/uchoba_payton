@@ -27,7 +27,7 @@ def markdown_to_docx(text):
                 document.add_paragraph(line[2:], style='List Bullet')
             elif line[0].isdigit() and line[1] == '.':
                 document.add_paragraph(line[3:], style='List Number')
-            elif line[:3].count('_') == 1 or line[:3].count('*') == 1:
+            # elif line[:3].count('_') == 1 or line[:3].count('*') == 1:
                 document.add_paragraph().add_run(line[1:-1]).italic = True
             elif line[:3].count('_') == 2 or line[:3].count('*') == 2:
                 document.add_paragraph().add_run(line[2:-2]).bold = True
@@ -39,4 +39,4 @@ def markdown_to_docx(text):
                 document.add_paragraph(line)
         else:
             document.add_paragraph()
-    document.save('res.docx')
+    document.save(f'{text[0]}.docx')
