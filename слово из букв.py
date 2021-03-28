@@ -1,34 +1,18 @@
-lower_cyrillic = ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н',
-        'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы',
-        'ь', 'э', 'ю', 'я']
-upper_cyrillic = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н',
-        'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы',
-        'Ь', 'Э', 'Ю', 'Я']
+import xlsxwriter
 
+workbook = xlsxwriter.Workbook('res.xlsx')
+worksheet = workbook.add_worksheet()
 
-def encrypt_caesar(shift):
-    return lower_cyrillic[shift:] + \
-           lower_cyrillic[:shift] + \
-           upper_cyrillic[shift:] + \
-           upper_cyrillic[:shift]
-
-
-def decrypt_caesar(typ="enc", shift=3):
-    a1 = lower_cyrillic + upper_cyrillic
-    a2 = encrypt_caesar(shift)
-
-    t = {
-        "enc": str.maketrans(a1, a2),
-        "dec": str.maketrans(a2, a1)
-    }
-
-    return t[typ]
-
-
-
-msg = "Да здравствует салат Цезарь!"
-shift = 5
-encrypted = encrypt_caesar(msg, shift)
-decrypted = decrypt_caesar(encrypted, shift)
-print(encrypted)
-print(decrypted)
+data = [('Питание', 1200), ('Развлечения', 1500), ('Учеба', 300),
+        ('Лечение', 100), ('Прочее', 670), ]
+for row, (item, price) in enumerate(data):
+    worksheet.write(row, 0, item)
+    worksheet.write(row, 1, price)
+    chart = workbook.add_chart({'type': 'pie'})
+    chart.add_series({'values': '=Sheet1!B1:B5'})
+    worksheet.insert_chart('C3', chart)
+    chart.add_series({
+        'categories': '=Sheet1!$A$1:$A$5',
+        'values': '=Sheet1!$B$1:$B$5',
+    })
+workbook.close()
