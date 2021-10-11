@@ -9,8 +9,8 @@ a = 1
 for i in nomer_nekorrekt:
     nomer.append(i)
 
-if nomer_nekorrekt[0] != '8':
-    if nomer_nekorrekt[0] == '+' and nomer_nekorrekt[1] == '7':
+if nomer[0] != '8':
+    if nomer[0] != '+' and nomer[1] != '7':
         nomer_nekorrekt = 'error'
 
 for i in nomer:
@@ -19,33 +19,33 @@ for i in nomer:
     if i == ')':
         sk2 += 1
 
-if sk1 + sk2 != 2:
-    if sk1 + sk2 != 0:
+if sk1 != 1:
+    if sk2 != 1:
         nomer_nekorrekt = 'error'
 
-for i in range(len(nomer)):
-    if nomer[i] != nomer[-1]:
-        if nomer[i] == '-' and nomer[i + 1] == '-':
+m = ''
+for i in nomer:
+    if (i == '-') and (m == '-'):
             nomer_nekorrekt = 'error'
+            break
+    m = i
 
 for i in range(len(nomer)):
-    if nomer_nekorrekt == 'error':
-        break
-    else:
-        if nomer[i] in sifri:
-            nomer_korrekten.append(nomer[i])
+    if nomer[i] in sifri:
+        nomer_korrekten.append(nomer[i])
+for i in range(len(nomer_korrekten)):
+    if 
 
-for i in nomer_korrekten:
-    if nomer_nekorrekt == 'error':
-        print('error')
-        break
-    else:
 
-        if (len(nomer) == 11) and (a != 0):
-            print('+7', end='')
-            a = 0
-        else:
-            print(i, end='')
+
+if len(nomer_korrekten) != 11:
+    nomer_nekorrekt == 'error'
+
+if nomer_nekorrekt != 'error':
+    print('+7' + ''.join(nomer_korrekten[1:]))
+
+else:
+    print('error')
 
 
 
