@@ -1,172 +1,105 @@
 import pygame
-import os
-import sys
-
-
-def load_image(name, color_key=None):
-    fullname = os.path.join('data', name)
-    try:
-        image = pygame.image.load(fullname)
-    except pygame.error as message:
-        print('Не удаётся загрузить:', name)
-        raise SystemExit(message)
-    image = image.convert_alpha()
-    if color_key is not None:
-        if color_key is -1:
-            color_key = image.get_at((0, 0))
-        image.set_colorkey(color_key)
-    return image
-
-
 pygame.init()
-size = width, height = 500, 500
-screen = pygame.display.set_mode(size)
-sprite_group = pygame.sprite.Group()
-hero_group = pygame.sprite.Group()
-
-tile_image = {'wall': load_image('box.png'),
-              'empty': load_image('grass.png')}
-player_image = load_image('mar.png')
-
-tile_width = tile_height = 50
+SCREEN = pygame.display.set_mode((300, 300))
 
 
-class ScreenFrame(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.rect = (0, 0, 500, 500)
+move_map = {pygame.K_w: pygame.math.Vector2( 0, -1),
+            pygame.K_s: pygame.math.Vector2( 0,  1),
+            pygame.K_a: pygame.math.Vector2(-1,  0),
+            pygame.K_d: pygame.math.Vector2( 1,  0)}
 
 
-class SpriteGroup(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
 
-    def get_event(self, event):
-        for inet in self:
-            inet.get_event(event)
-
-
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self, group):
-        super().__init__(group)
-        self.rect = None
-
-    def get_event(self, event):
-        pass
+class Actor(pygame.sprite.Sprite):
+    def __init__(self, group, color, pos, size=(30, 30)):
+        self.image = pygame.Surface(size)
+        self.image.fill(color)
+        self.rect = self.image.get_rect(center=pos)
+        pygame.sprite.Sprite.__init__(self, group)
 
 
-class Tile(Sprite):
-    def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(sprite_group)
-        self.image = tile_image[tile_type]
-        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
+
+class Bullet(Actor):
+    def __init__(self, *args):
+        Actor.__init__(self, *args)
+        self.speed = 10
 
 
-class Player(Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(hero_group)
-        self.image = player_image
-        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
-        self.pos = (pos_x, pos_y)
 
-    def move(self, x, y):
-        self.pos = (x, y)
-        self.rect = self.image.get_rect().move(tile_width * self.pos[0] + 15,
-                                               tile_height * self.pos[1] + 5)
+    def update(self):
+        self.rect.move_ip(self.speed, 0)
+        if not SCREEN.get_rect().colliderect(self.rect):
+            self.kill()
 
 
-def terminate():
-    pygame.quit()
-    sys.exit()
+
+class Player(Actor):
+    def __init__(self, *args):
+        self._layer = 4
+        Actor.__init__(self, *args)
+        self.speed = 4
+        self.timeout = 0
 
 
-def start_screen():
-    intro_text = ["Перемещение героя", '',
-                  "Герой двигается",
-                  "Карта на месте"]
-    fon = pygame.transform.scale(load_image('fon.jpg'), size)
-    screen.blit((fon), (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                return
-        pygame.display.flip()
+    def update(self):
+        p = pygame.key.get_pressed()
+        move_vector = pygame.math.Vector2(0, 0)
+        for v in [move_map[key] for key in move_map if p[key]]:
+            move_vector += v
+        if move_vector:
+            self.rect.move_ip(*move_vector.normalize() * self.speed)
+            self.rect.clamp_ip(SCREEN.get_rect())
 
 
-def load_level(filename):
-    filename = 'data/' + filename
-    with open(filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
-    max_width = max(map(len, level_map))
-    return list(map(lambda x: list(x.ljust(max_width, '.')), level_map))
+
+        if self.timeout :
+            self.timeout -= 1
+        if p[pygame.K_SPACE] and not self.timeout:
+            Bullet(self.groups()[0], (130, 200, 77), self.rect.center, (10, 3))
+            self.timeout = 5
 
 
-def generate_level(level):
-    new_player, x, y = None, None, None
-    for y in range(len(level)):
-        for x in range(len(level[y])):
-            if level[y][x] == '.':
-                Tile('empty', x, y)
-            elif level[y][x] == '#':
-                Tile('wall', x, y)
-            elif level[y][x] == '@':
-                Tile('empty', x, y)
-                new_player = Player(x, y)
-                level[y][x] = '.'
-    return new_player, x, y
+
+class Background(pygame.sprite.Sprite):
+    def __init__(self, number, *args):
+        self.image = pygame.image.load('back.jpg').convert()
+        self.rect = self.image.get_rect()
+        self._layer = -10
+        pygame.sprite.Sprite.__init__(self, *args)
+        self.moved = 0
+        self.number = number
+        self.rect.x = self.rect.width * self.number
 
 
-def move(hero, movement):
-    x, y = hero.pos
-    if movement == 'up':
-        if y > 0 and level_map[y - 1][x] == '.':
-            hero.move(x, y - 1)
-    elif movement == 'down':
-        if y < max_y - 1 and level_map[y + 1][x] == '.':
-            hero.move(x, y + 1)
-    elif movement == 'left':
-        if x > 0 and level_map[y][x - 1] == '.':
-            hero.move(x - 1, y)
-    elif movement == 'right':
-        if x < max_x - 1 and level_map[y][x + 1] == '.':
-            hero.move(x + 1, y)
+
+    def update(self):
+        self.rect.move_ip(-1, 0)
+        self.moved += 1
 
 
-if __name__ == '__main__':
-    pygame.display.set_caption('Марио')
-    player = None
-    ranning = True
-    start_screen()
-    level_map = load_level('map.map')
-    hero, max_x, max_y = generate_level(level_map)
-    while ranning:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                ranning = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    move(hero, 'up')
-                if event.key == pygame.K_DOWN:
-                    move(hero, 'down')
-                if event.key == pygame.K_RIGHT:
-                    move(hero, 'right')
-                if event.key == pygame.K_LEFT:
-                    move(hero, 'left')
-        screen.fill(pygame.Color('black'))
-        sprite_group.draw(screen)
-        hero_group.draw(screen)
-        pygame.display.flip()
-    pygame.quit()
+
+        if self.moved >= self.rect.width:
+            self.rect.x = self.rect.width * self.number
+            self.moved = 0
+
+
+
+group = pygame.sprite.LayeredUpdates()
+Player(group, (255, 255, 255), (100, 100))
+Background(0, group)
+Background(1, group)
+
+
+
+clock = pygame.time.Clock()
+run = True
+while run:
+    for e in pygame.event.get():
+        if e.type ==pygame.QUIT:
+            run = False
+    SCREEN.fill((0,0,0))
+    group.update()
+    group.draw(SCREEN)
+    pygame.display.flip()
+    clock.tick(60)

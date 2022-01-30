@@ -1,25 +1,9 @@
-def bad_pass(a):
-    bad_sequence = ['qwertyuiop', 'asdfghjkl',
-                    'zxcvbnm', 'йцукенгшщзхъ', 'фывапролджэё', 'ячсмитьбю']
-    num = list('1234567890')
-    if len(a) <= 8:
-        return 'error'
-    if a.islower() or a.isupper():
-        return 'error'
+import argparse
+import re
 
-    if a.isdigit() or a.isalpha():
-        return 'error'
-    b = a.lower()
-    for i in bad_sequence:
-        for j in range(len(i) - 2):
-            if i[j: j + 3] in b:
-                return 'error'
-
-    for i in num:
-        if i in a:
-            return 'ok'
-
-    return 'error'
-
-
-print(bad_pass(input()))
+msg_text = \
+    "/test arg1 arg2=1 arg3=hello " \
+    "arg4=\"hello world\" arg5=\"7\" arg6=\"hello \"test\" world\" arg7=\"value\""
+p = re.compile(r'(?:"(?:\\"|.)*?"|\S)*')
+arglist = list(filter(None, re.findall(p, msg_text)))
+print(arglist)
